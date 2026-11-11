@@ -1,0 +1,17 @@
+Illustration for lesson "hotel-checkin-a2" (save the result as samples/lessons/hotel-checkin.png)
+
+Vertical 9:16 illustration (portrait, e.g. 768x1366 or 1080x1920), clean hand-drawn line art with soft flat pastel colors, friendly modern webtoon style, bright and warm lighting. Same style as a previous image of a hotel check-out scene.
+
+Scene: the reception desk of a modern hotel lobby, morning. Above the desk a hanging rectangular sign that says "RECEPTION". A small sign on the wall behind the desk says "CHECK-IN".
+
+Characters (important positions):
+- LEFT side: David, a friendly man in his late 20s with short dark hair, casual smart jacket and backpack, a rolling suitcase beside him, standing in front of the desk and handing his passport across the counter with one hand.
+- RIGHT side: Sophie, a smiling female receptionist in her 20s with her hair in a neat bun, wearing a dark hotel uniform with a name badge, standing behind the counter, a computer monitor in front of her and a hotel key card on the counter.
+- Both characters face each other in three-quarter view, faces clearly visible and expressive.
+
+Composition:
+- Faces and upper bodies in the UPPER HALF of the image (faces around 30-45% from the top).
+- The LOWER 40% should be calm and simple (front of the counter, floor, the suitcase) because subtitles will be placed there.
+- Leave some empty space above the characters' heads.
+
+Do NOT include any other text, captions, speech bubbles, logos, brand names or frames.

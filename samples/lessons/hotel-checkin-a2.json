@@ -1,0 +1,141 @@
+{
+  "lesson_id": "hotel-checkin-a2",
+  "schema_version": 1,
+  "meta": {
+    "topic": "Checking in at a hotel",
+    "level": "A2",
+    "title_en": "Check-in Surprise: Wrong Room?",
+    "title_vi": "Nhận phòng bất ngờ: Nhầm phòng rồi?",
+    "learning_goal_vi": "Nhận phòng khách sạn và xử lý khi bị ghi nhầm loại phòng",
+    "scene_image": "hotel-checkin.png",
+    "scene_focus_y": 0.38
+  },
+  "characters": [
+    { "id": "A", "name": "David", "gender": "male", "voice": "en-US-AndrewNeural" },
+    { "id": "B", "name": "Sophie", "gender": "female", "voice": "en-US-AvaNeural" }
+  ],
+  "dialogue": [
+    {
+      "speaker": "A",
+      "en": "Hi! I have a reservation. My name is David Miller.",
+      "vi": "Chào chị! Tôi có đặt phòng trước. Tôi tên là David Miller."
+    },
+    {
+      "speaker": "B",
+      "en": "Welcome! May I see your passport, please?",
+      "vi": "Chào mừng anh! Cho em xem hộ chiếu của anh được không ạ?"
+    },
+    {
+      "speaker": "A",
+      "en": "Here you go. I booked a double room for three nights.",
+      "vi": "Đây ạ. Tôi đã đặt một phòng đôi trong ba đêm."
+    },
+    {
+      "speaker": "B",
+      "en": "Hmm, I see a single room under your name.",
+      "vi": "Ừm, em thấy anh đặt một phòng đơn."
+    },
+    {
+      "speaker": "A",
+      "en": "Really? Here's my confirmation email. It says double.",
+      "vi": "Thật sao? Đây là email xác nhận của tôi. Trong đó ghi phòng đôi mà."
+    },
+    {
+      "speaker": "B",
+      "en": "You're right. Sorry! I'll upgrade you to a double room for free.",
+      "vi": "Anh nói đúng ạ. Em xin lỗi! Em sẽ nâng cấp lên phòng đôi miễn phí cho anh."
+    },
+    {
+      "speaker": "A",
+      "en": "Thank you! Is breakfast included?",
+      "vi": "Cảm ơn chị! Có bao gồm bữa sáng không?"
+    },
+    {
+      "speaker": "B",
+      "en": "Yes, it's served from six to ten on the second floor.",
+      "vi": "Có ạ, bữa sáng phục vụ từ sáu đến mười giờ ở tầng hai."
+    },
+    {
+      "speaker": "A",
+      "en": "Great. What's the Wi-Fi password?",
+      "vi": "Tuyệt. Mật khẩu Wi-Fi là gì vậy?"
+    },
+    {
+      "speaker": "B",
+      "en": "It's on your key card. Your room is 708. Enjoy your stay!",
+      "vi": "Mật khẩu có trên thẻ phòng ạ. Phòng của anh là 708. Chúc anh nghỉ ngơi vui vẻ!"
+    },
+    {
+      "speaker": "A",
+      "en": "Thanks a lot. Have a nice day!",
+      "vi": "Cảm ơn chị nhiều. Chúc chị một ngày tốt lành!"
+    }
+  ],
+  "vocabulary": [
+    { "word": "reservation", "ipa": "ˌrezɚˈveɪʃən", "pos": "noun", "meaning_vi": "sự đặt phòng trước", "dialogue_idx": 0 },
+    { "word": "passport", "ipa": "ˈpæspɔːrt", "pos": "noun", "meaning_vi": "hộ chiếu", "dialogue_idx": 1 },
+    { "word": "double room", "ipa": "ˌdʌbəl ˈruːm", "pos": "noun", "meaning_vi": "phòng đôi", "dialogue_idx": 2 },
+    { "word": "single room", "ipa": "ˌsɪŋɡəl ˈruːm", "pos": "noun", "meaning_vi": "phòng đơn", "dialogue_idx": 3 },
+    { "word": "confirmation", "ipa": "ˌkɑːnfɚˈmeɪʃən", "pos": "noun", "meaning_vi": "sự xác nhận", "dialogue_idx": 4 },
+    { "word": "upgrade", "ipa": "ʌpˈɡreɪd", "pos": "verb", "meaning_vi": "nâng cấp", "dialogue_idx": 5 },
+    { "word": "include", "ipa": "ɪnˈkluːd", "pos": "verb", "meaning_vi": "bao gồm", "dialogue_idx": 6 },
+    { "word": "serve", "ipa": "sɝːv", "pos": "verb", "meaning_vi": "phục vụ (đồ ăn, đồ uống)", "dialogue_idx": 7 },
+    { "word": "key card", "ipa": "ˈkiː ˌkɑːrd", "pos": "noun", "meaning_vi": "thẻ khóa phòng", "dialogue_idx": 9 },
+    { "word": "stay", "ipa": "steɪ", "pos": "noun", "meaning_vi": "thời gian lưu trú", "dialogue_idx": 9 }
+  ],
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "multiple_choice",
+      "prompt_en": "What does \"reservation\" mean?",
+      "prompt_vi": "\"reservation\" nghĩa là gì?",
+      "options": ["hộ chiếu", "sự đặt phòng trước", "thẻ khóa phòng"],
+      "answer": "sự đặt phòng trước",
+      "explanation_vi": "I have a reservation = Tôi có đặt phòng trước.",
+      "think_seconds": 5,
+      "vocab_refs": ["reservation"]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "prompt_en": "Welcome! May I see your ____, please?",
+      "prompt_vi": "Chào mừng anh! Cho em xem hộ chiếu của anh được không ạ?",
+      "answer": "passport",
+      "explanation_vi": "passport = hộ chiếu",
+      "think_seconds": 5,
+      "vocab_refs": ["passport"]
+    },
+    {
+      "id": "ex3",
+      "type": "multiple_choice",
+      "prompt_en": "Which word means \"nâng cấp\"?",
+      "prompt_vi": "Từ nào có nghĩa là \"nâng cấp\"?",
+      "options": ["include", "upgrade", "serve"],
+      "answer": "upgrade",
+      "explanation_vi": "I'll upgrade you to a double room = Em sẽ nâng cấp lên phòng đôi cho anh.",
+      "think_seconds": 5,
+      "vocab_refs": ["upgrade"]
+    },
+    {
+      "id": "ex4",
+      "type": "translate_vi_en",
+      "prompt_en": "Say it in English:",
+      "prompt_vi": "Có bao gồm bữa sáng không?",
+      "answer": "Is breakfast included?",
+      "explanation_vi": "breakfast included = đã bao gồm bữa sáng",
+      "think_seconds": 7,
+      "vocab_refs": ["include"]
+    },
+    {
+      "id": "ex5",
+      "type": "comprehension",
+      "prompt_en": "Why did David get a double room for free?",
+      "prompt_vi": "Vì sao David được ở phòng đôi miễn phí?",
+      "options": ["The hotel made a booking mistake", "He paid extra money", "It was his birthday"],
+      "answer": "The hotel made a booking mistake",
+      "explanation_vi": "Khách sạn ghi nhầm thành \"single room\", nên nâng cấp miễn phí cho David.",
+      "think_seconds": 5,
+      "vocab_refs": ["single room", "upgrade"]
+    }
+  ]
+}

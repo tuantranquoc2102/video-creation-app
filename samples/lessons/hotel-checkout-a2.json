@@ -1,0 +1,141 @@
+{
+  "lesson_id": "hotel-checkout-a2",
+  "schema_version": 1,
+  "meta": {
+    "topic": "Checking out of a hotel",
+    "level": "A2",
+    "title_en": "Checking Out: Wait, What's This Charge?",
+    "title_vi": "Trả phòng: Ơ, khoản phí này là gì?",
+    "learning_goal_vi": "Trả phòng khách sạn và hỏi lại hóa đơn",
+    "scene_image": "Gemini_Generated_Image_gww702gww702gww7.png",
+    "scene_focus_y": 0.38
+  },
+  "characters": [
+    { "id": "A", "name": "Anna", "gender": "female", "voice": "en-US-AvaNeural" },
+    { "id": "B", "name": "Mark", "gender": "male", "voice": "en-US-AndrewNeural" }
+  ],
+  "dialogue": [
+    {
+      "speaker": "A",
+      "en": "Good morning! I'd like to check out, please. Room 512.",
+      "vi": "Chào anh! Tôi muốn trả phòng. Phòng 512."
+    },
+    {
+      "speaker": "B",
+      "en": "Of course. Here's your bill. Please take a look.",
+      "vi": "Vâng ạ. Đây là hóa đơn của chị. Chị xem qua giúp em nhé."
+    },
+    {
+      "speaker": "A",
+      "en": "Wait, what's this charge for thirty dollars?",
+      "vi": "Khoan đã, khoản phí ba mươi đô này là gì vậy?"
+    },
+    {
+      "speaker": "B",
+      "en": "That's for the minibar. You had two drinks and a snack.",
+      "vi": "Đó là tiền minibar ạ. Chị đã dùng hai đồ uống và một món ăn vặt."
+    },
+    {
+      "speaker": "A",
+      "en": "Really? I didn't open the minibar at all.",
+      "vi": "Thật sao? Tôi hoàn toàn không mở minibar mà."
+    },
+    {
+      "speaker": "B",
+      "en": "I'm sorry. Let me check with housekeeping.",
+      "vi": "Em xin lỗi. Để em kiểm tra lại với bộ phận buồng phòng."
+    },
+    {
+      "speaker": "A",
+      "en": "Sure, but please hurry. I have a flight at noon.",
+      "vi": "Được, nhưng anh làm nhanh giúp tôi nhé. Tôi có chuyến bay lúc trưa."
+    },
+    {
+      "speaker": "B",
+      "en": "You're right. It was our mistake. The charge is gone now.",
+      "vi": "Chị nói đúng ạ. Đó là lỗi của bên em. Khoản phí đã được xóa rồi."
+    },
+    {
+      "speaker": "A",
+      "en": "Thank you. Can I pay by credit card?",
+      "vi": "Cảm ơn anh. Tôi trả bằng thẻ tín dụng được không?"
+    },
+    {
+      "speaker": "B",
+      "en": "Yes. Would you like a taxi to the airport?",
+      "vi": "Được ạ. Chị có muốn đặt taxi ra sân bay không?"
+    },
+    {
+      "speaker": "A",
+      "en": "Yes, please. That would be great!",
+      "vi": "Có, phiền anh nhé. Vậy thì tốt quá!"
+    }
+  ],
+  "vocabulary": [
+    { "word": "check out", "ipa": "ˌtʃek ˈaʊt", "pos": "phrasal verb", "meaning_vi": "trả phòng", "dialogue_idx": 0 },
+    { "word": "bill", "ipa": "bɪl", "pos": "noun", "meaning_vi": "hóa đơn", "dialogue_idx": 1 },
+    { "word": "charge", "ipa": "tʃɑːrdʒ", "pos": "noun", "meaning_vi": "khoản phí", "dialogue_idx": 2 },
+    { "word": "minibar", "ipa": "ˈmɪnibɑːr", "pos": "noun", "meaning_vi": "tủ đồ uống nhỏ trong phòng", "dialogue_idx": 3 },
+    { "word": "snack", "ipa": "snæk", "pos": "noun", "meaning_vi": "đồ ăn vặt", "dialogue_idx": 3 },
+    { "word": "at all", "ipa": "ət ˈɑːl", "pos": "phrase", "meaning_vi": "hoàn toàn (không)", "dialogue_idx": 4 },
+    { "word": "housekeeping", "ipa": "ˈhaʊsˌkiːpɪŋ", "pos": "noun", "meaning_vi": "bộ phận buồng phòng", "dialogue_idx": 5 },
+    { "word": "flight", "ipa": "flaɪt", "pos": "noun", "meaning_vi": "chuyến bay", "dialogue_idx": 6 },
+    { "word": "mistake", "ipa": "mɪˈsteɪk", "pos": "noun", "meaning_vi": "lỗi, sự nhầm lẫn", "dialogue_idx": 7 },
+    { "word": "credit card", "ipa": "ˈkredɪt ˌkɑːrd", "pos": "noun", "meaning_vi": "thẻ tín dụng", "dialogue_idx": 8 }
+  ],
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "multiple_choice",
+      "prompt_en": "What does \"bill\" mean?",
+      "prompt_vi": "\"bill\" nghĩa là gì?",
+      "options": ["chuyến bay", "hóa đơn", "khoản phí"],
+      "answer": "hóa đơn",
+      "explanation_vi": "Here's your bill = Đây là hóa đơn của chị.",
+      "think_seconds": 5,
+      "vocab_refs": ["bill"]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "prompt_en": "Sure, but please hurry. I have a ____ at noon.",
+      "prompt_vi": "Tôi có chuyến bay lúc trưa.",
+      "answer": "flight",
+      "explanation_vi": "flight = chuyến bay",
+      "think_seconds": 5,
+      "vocab_refs": ["flight"]
+    },
+    {
+      "id": "ex3",
+      "type": "multiple_choice",
+      "prompt_en": "Which word means \"bộ phận buồng phòng\"?",
+      "prompt_vi": "Từ nào có nghĩa là \"bộ phận buồng phòng\"?",
+      "options": ["housekeeping", "minibar", "check out"],
+      "answer": "housekeeping",
+      "explanation_vi": "Let me check with housekeeping = Để em kiểm tra lại với bộ phận buồng phòng.",
+      "think_seconds": 5,
+      "vocab_refs": ["housekeeping"]
+    },
+    {
+      "id": "ex4",
+      "type": "translate_vi_en",
+      "prompt_en": "Say it in English:",
+      "prompt_vi": "Tôi trả bằng thẻ tín dụng được không?",
+      "answer": "Can I pay by credit card?",
+      "explanation_vi": "pay by credit card = trả bằng thẻ tín dụng",
+      "think_seconds": 7,
+      "vocab_refs": ["credit card"]
+    },
+    {
+      "id": "ex5",
+      "type": "comprehension",
+      "prompt_en": "Why was the minibar charge wrong?",
+      "prompt_vi": "Vì sao khoản phí minibar bị sai?",
+      "options": ["Anna didn't open the minibar", "The room was dirty", "The taxi was late"],
+      "answer": "Anna didn't open the minibar",
+      "explanation_vi": "Anna nói: \"I didn't open the minibar at all.\" = Tôi hoàn toàn không mở minibar.",
+      "think_seconds": 5,
+      "vocab_refs": ["minibar", "at all", "mistake"]
+    }
+  ]
+}

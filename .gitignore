@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Secrets
+.env
+.env.*
+
+# Runtime data & generated media
+data/*.db
+data/tts_cache/
+output/
+
+# OS
+.DS_Store
+
+# Commercially licensed fonts – not redistributable; copy them in locally (see README)
+assets/fonts/Arial Unicode.ttf
+assets/fonts/Arial Rounded Bold.ttf

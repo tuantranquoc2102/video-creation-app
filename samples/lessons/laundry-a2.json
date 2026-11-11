@@ -1,0 +1,134 @@
+{
+  "lesson_id": "laundry-a2",
+  "schema_version": 1,
+  "meta": {
+    "topic": "At the laundromat",
+    "level": "A2",
+    "title_en": "Express Laundry is HOW MUCH?",
+    "title_vi": "Giặt nhanh mà giá BAO NHIÊU?",
+    "learning_goal_vi": "Hỏi giá và dịch vụ ở tiệm giặt ủi"
+  },
+  "characters": [
+    { "id": "A", "name": "Mia", "gender": "female", "voice": "en-US-AvaNeural" },
+    { "id": "B", "name": "Tom", "gender": "male", "voice": "en-US-AndrewNeural" }
+  ],
+  "dialogue": [
+    {
+      "speaker": "A",
+      "en": "Hi! I need these clothes washed today. Do you have an express service?",
+      "vi": "Chào anh! Em cần giặt chỗ quần áo này trong hôm nay. Bên anh có dịch vụ giặt nhanh không?"
+    },
+    {
+      "speaker": "B",
+      "en": "Sure. Express takes three hours, but it costs a bit more.",
+      "vi": "Có chứ. Giặt nhanh mất ba tiếng, nhưng giá cao hơn một chút."
+    },
+    {
+      "speaker": "A",
+      "en": "How much is it per kilo?",
+      "vi": "Bao nhiêu tiền một ký vậy anh?"
+    },
+    {
+      "speaker": "B",
+      "en": "Regular is forty thousand dong. Express is ninety.",
+      "vi": "Giặt thường là bốn mươi nghìn đồng. Giặt nhanh là chín mươi."
+    },
+    {
+      "speaker": "A",
+      "en": "Ninety? That's more than double! Is there a discount for students?",
+      "vi": "Chín mươi á? Gấp hơn hai lần luôn! Có giảm giá cho sinh viên không anh?"
+    },
+    {
+      "speaker": "B",
+      "en": "Yes, ten percent off if you show your student card.",
+      "vi": "Có, giảm mười phần trăm nếu em xuất trình thẻ sinh viên."
+    },
+    {
+      "speaker": "A",
+      "en": "Great. Can you also remove this coffee stain on my shirt?",
+      "vi": "Tuyệt quá. Anh tẩy giúp em vết cà phê trên áo sơ mi này được không?"
+    },
+    {
+      "speaker": "B",
+      "en": "We'll try, but I can't guarantee it will come out completely.",
+      "vi": "Bên anh sẽ thử, nhưng anh không dám chắc là nó sẽ sạch hoàn toàn."
+    },
+    {
+      "speaker": "A",
+      "en": "That's fine. Should I pay now or when I pick them up?",
+      "vi": "Không sao ạ. Em trả tiền bây giờ hay lúc đến lấy đồ?"
+    },
+    {
+      "speaker": "B",
+      "en": "You can pay at pickup. Here's your receipt. Don't lose it!",
+      "vi": "Em trả lúc lấy đồ cũng được. Biên nhận của em đây. Đừng làm mất nhé!"
+    }
+  ],
+  "vocabulary": [
+    { "word": "express", "ipa": "ɪkˈspres", "pos": "adjective", "meaning_vi": "nhanh, hỏa tốc", "dialogue_idx": 0 },
+    { "word": "cost", "ipa": "kɑːst", "pos": "verb", "meaning_vi": "có giá, tốn (tiền)", "dialogue_idx": 1 },
+    { "word": "per", "ipa": "pɝː", "pos": "preposition", "meaning_vi": "mỗi, cho mỗi", "dialogue_idx": 2 },
+    { "word": "regular", "ipa": "ˈreɡjəlɚ", "pos": "adjective", "meaning_vi": "thông thường, tiêu chuẩn", "dialogue_idx": 3 },
+    { "word": "double", "ipa": "ˈdʌbəl", "pos": "noun", "meaning_vi": "gấp đôi", "dialogue_idx": 4 },
+    { "word": "discount", "ipa": "ˈdɪskaʊnt", "pos": "noun", "meaning_vi": "sự giảm giá", "dialogue_idx": 4 },
+    { "word": "remove", "ipa": "rɪˈmuːv", "pos": "verb", "meaning_vi": "tẩy, loại bỏ", "dialogue_idx": 6 },
+    { "word": "stain", "ipa": "steɪn", "pos": "noun", "meaning_vi": "vết bẩn, vết ố", "dialogue_idx": 6 },
+    { "word": "guarantee", "ipa": "ˌɡerənˈtiː", "pos": "verb", "meaning_vi": "đảm bảo, cam kết", "dialogue_idx": 7 },
+    { "word": "receipt", "ipa": "rɪˈsiːt", "pos": "noun", "meaning_vi": "biên nhận, hóa đơn", "dialogue_idx": 9 }
+  ],
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "multiple_choice",
+      "prompt_en": "What does \"discount\" mean?",
+      "prompt_vi": "\"discount\" nghĩa là gì?",
+      "options": ["biên nhận", "sự giảm giá", "vết bẩn"],
+      "answer": "sự giảm giá",
+      "explanation_vi": "a discount for students = giảm giá cho sinh viên",
+      "think_seconds": 5,
+      "vocab_refs": ["discount"]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "prompt_en": "Can you also remove this coffee ____ on my shirt?",
+      "prompt_vi": "Anh tẩy giúp em vết cà phê trên áo sơ mi này được không?",
+      "answer": "stain",
+      "explanation_vi": "stain = vết bẩn, vết ố",
+      "think_seconds": 5,
+      "vocab_refs": ["stain", "remove"]
+    },
+    {
+      "id": "ex3",
+      "type": "multiple_choice",
+      "prompt_en": "Which word means \"biên nhận, hóa đơn\"?",
+      "prompt_vi": "Từ nào có nghĩa là \"biên nhận, hóa đơn\"?",
+      "options": ["regular", "receipt", "remove"],
+      "answer": "receipt",
+      "explanation_vi": "Here's your receipt = Biên nhận của em đây.",
+      "think_seconds": 5,
+      "vocab_refs": ["receipt"]
+    },
+    {
+      "id": "ex4",
+      "type": "translate_vi_en",
+      "prompt_en": "Say it in English:",
+      "prompt_vi": "Bao nhiêu tiền một ký vậy anh?",
+      "answer": "How much is it per kilo?",
+      "explanation_vi": "per kilo = cho mỗi ký",
+      "think_seconds": 7,
+      "vocab_refs": ["per"]
+    },
+    {
+      "id": "ex5",
+      "type": "comprehension",
+      "prompt_en": "How much does express laundry cost per kilo?",
+      "prompt_vi": "Giặt nhanh giá bao nhiêu một ký?",
+      "options": ["40,000 dong", "90,000 dong", "10 percent"],
+      "answer": "90,000 dong",
+      "explanation_vi": "Tom nói: \"Express is ninety.\" = chín mươi nghìn đồng.",
+      "think_seconds": 5,
+      "vocab_refs": ["express", "cost"]
+    }
+  ]
+}
