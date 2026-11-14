@@ -25,6 +25,12 @@ def _vocabulary_video_render():
     render()
 
 
+def _join_video_render():
+    """Lazy import to avoid circular dependency."""
+    from ui.views.join_video import render
+    render()
+
+
 def _lesson_video_render():
     """Lazy import to avoid circular dependency."""
     from ui.views.lesson_video import render
@@ -52,6 +58,7 @@ ROUTES: list[Route] = [
     Route(key="lesson_video",     label="Video Bài Học",   icon="🎓", render=_lesson_video_render),
     Route(key="dialogue_video",   label="Video Hội Thoại", icon="💬", render=_dialogue_video_render),
     Route(key="vocabulary_video", label="Video Từ Vựng",   icon="📖", render=_vocabulary_video_render),
+    Route(key="join_video",       label="Ghép Video",      icon="🔗", render=_join_video_render),
     Route(key="create_video",     label="Tạo Video",       icon="🎥", render=create_video.render),
     Route(key="manage_videos",    label="Quản lý Video",   icon="📂", render=manage_videos.render),
 ]
