@@ -8,6 +8,7 @@
 - **Video hội thoại 2 người** — Upload CSV với 2 speaker, tự động tạo video với bubble chat hoặc plain text, hiệu ứng bong bóng tail, per-speaker voice selection
 - **Video từ vựng (Flashcard)** — Upload CSV từ vựng (english/ipa/vietnam/example/translate), tạo video flashcard
 - **🔗 Ghép video** — Upload nhiều video, sắp xếp thứ tự, ghép thành 1 video (tự co giãn khác kích thước/FPS, bù im lặng cho clip không có tiếng); tùy chọn chèn logo ở giữa phía dưới (logo kênh mặc định hoặc upload, chỉnh kích thước/độ đậm/khoảng cách đáy)
+- **🕸️ Crawl video kênh** — Nhập link kênh YouTube / TikTok (hoặc link từng video Facebook), lấy danh sách video kèm metadata (tiêu đề, mô tả, tag, ngày đăng, thời lượng, lượt xem/thích/bình luận, thumbnail…) và xuất CSV. Chỉ đọc metadata công khai qua `yt-dlp`, không tải video. Facebook: yt-dlp không liệt kê được toàn bộ video của một trang, chỉ hỗ trợ link từng video/reel
 - **Text-to-Speech** — Hỗ trợ Edge TTS (13 giọng en-US nam/nữ) và gTTS
 - **Tùy chỉnh hiển thị** — Font size, font color, padding top, bubble chat toggle, live preview trước khi tạo
 - **Hình nền linh hoạt** — Màu đơn sắc, upload hình ảnh, hoặc chọn từ thư viện `assets/`
@@ -30,6 +31,7 @@ video-creation-app/
 │   ├── tts_service.py      # gTTS + Edge TTS wrapper, cache + retry
 │   ├── video_service.py    # CSV parsing, detect, business helpers
 │   ├── video_join.py       # Ghép video + logo (ffmpeg 1 lượt)
+│   ├── channel_crawler.py  # Crawl danh sách video kênh (yt-dlp) → CSV
 │   ├── lesson/             # Lesson JSON: schema, validators, importers
 │   ├── render/             # Dựng video bài học bằng Pillow + MoviePy
 │   │   └── segments/       # intro, dialogue, vocab, exercise, outro
@@ -50,6 +52,7 @@ video-creation-app/
 │       ├── lesson_video.py # Trang tạo video bài học song ngữ
 │       ├── dialogue_video.py  # Trang tạo video hội thoại (dedicated)
 │       ├── join_video.py      # Trang ghép video + logo
+│       ├── crawl_channel.py   # Trang crawl video kênh + xuất CSV
 │       ├── create_video.py    # Trang tạo video chung (text/txt/csv)
 │       └── manage_videos.py   # Quản lý video — filter, delete, export
 ├── samples/lessons/        # Lesson JSON mẫu
