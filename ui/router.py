@@ -37,6 +37,12 @@ def _crawl_channel_render():
     render()
 
 
+def _scene_video_render():
+    """Lazy import to avoid circular dependency."""
+    from ui.views.scene_video import render
+    render()
+
+
 def _lesson_video_render():
     """Lazy import to avoid circular dependency."""
     from ui.views.lesson_video import render
@@ -62,6 +68,7 @@ class Route:
 ROUTES: list[Route] = [
     Route(key="dashboard",        label="Dashboard",       icon="🏠", render=dashboard.render),
     Route(key="lesson_video",     label="Video Bài Học",   icon="🎓", render=_lesson_video_render),
+    Route(key="scene_video",      label="Video Phân Cảnh", icon="🎞️", render=_scene_video_render),
     Route(key="dialogue_video",   label="Video Hội Thoại", icon="💬", render=_dialogue_video_render),
     Route(key="vocabulary_video", label="Video Từ Vựng",   icon="📖", render=_vocabulary_video_render),
     Route(key="join_video",       label="Ghép Video",      icon="🔗", render=_join_video_render),

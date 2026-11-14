@@ -5,6 +5,7 @@
 ## ✨ Tính năng chính
 
 - **🎓 Video bài học song ngữ (mới)** — Từ 1 file Lesson JSON tạo video 4 phần: hội thoại song ngữ Anh–Việt (tô màu từ vựng) → 10 thẻ từ vựng (IPA, nghĩa, câu gốc) → bài tập tự nhớ (đếm ngược + đáp án) → ôn tập. Xuất kèm phụ đề EN/VI, thumbnail, manifest. Xem [docs/03](docs/03-phase-0-1-implementation.md)
+- **🎞️ Video phân cảnh (mới)** — Upload 1 file JSON kịch bản chia theo phân cảnh, app hiện đúng số ô upload hình tương ứng (mỗi phân cảnh 1 hình). Review từng cảnh, chỉnh vị trí bubble chat và hướng mũi tên cho từng nhân vật; trong video mỗi lượt chỉ hiện bubble của người đang nói (tiếng Anh + tiếng Việt) rồi chuyển sang người tiếp theo. Xuất kèm phụ đề EN/VI, thumbnail; tải lại được JSON kèm bố cục bubble. Định dạng: file lesson theo phân cảnh (`lesson_id`, `meta`, `characters`, `scenes[].dialogue`…) — mẫu: `samples/scenes/job-interviews-b1.json`; mỗi ô upload kèm `setting_en` và `image_prompt` của cảnh
 - **Video hội thoại 2 người** — Upload CSV với 2 speaker, tự động tạo video với bubble chat hoặc plain text, hiệu ứng bong bóng tail, per-speaker voice selection
 - **Video từ vựng (Flashcard)** — Upload CSV từ vựng (english/ipa/vietnam/example/translate), tạo video flashcard
 - **🔗 Ghép video** — Upload nhiều video, sắp xếp thứ tự, ghép thành 1 video (tự co giãn khác kích thước/FPS, bù im lặng cho clip không có tiếng); tùy chọn chèn logo ở giữa phía dưới (logo kênh mặc định hoặc upload, chỉnh kích thước/độ đậm/khoảng cách đáy)
@@ -33,6 +34,7 @@ video-creation-app/
 │   ├── video_join.py       # Ghép video + logo (ffmpeg 1 lượt)
 │   ├── channel_crawler.py  # Crawl danh sách video kênh (yt-dlp) → CSV
 │   ├── lesson/             # Lesson JSON: schema, validators, importers
+│   ├── scene_video/        # Video phân cảnh: schema Story JSON + vẽ bubble/mũi tên + render
 │   ├── render/             # Dựng video bài học bằng Pillow + MoviePy
 │   │   └── segments/       # intro, dialogue, vocab, exercise, outro
 │   └── generators/
@@ -50,6 +52,7 @@ video-creation-app/
 │   └── views/
 │       ├── dashboard.py    # Dashboard — metrics, chart, recent activity
 │       ├── lesson_video.py # Trang tạo video bài học song ngữ
+│       ├── scene_video.py     # Trang video phân cảnh (JSON + hình từng cảnh, chỉnh bubble)
 │       ├── dialogue_video.py  # Trang tạo video hội thoại (dedicated)
 │       ├── join_video.py      # Trang ghép video + logo
 │       ├── crawl_channel.py   # Trang crawl video kênh + xuất CSV

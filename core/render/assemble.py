@@ -261,6 +261,83 @@ def _make_logger(progress_cb: ProgressFn | None):
     return _Logger()
 
 
+@dataclass
+class EncodedTimeline:
+    duration: float
+    segments: list[dict]
+    speech: list[dict]
+    cues_en: list[TimedCue]
+    cues_vi: list[TimedCue]
+    shots: int
+
+
+def encode_shots(shots: list[Shot], cfg: RenderConfig, video_path: str, work: str,
+                 progress_cb: ProgressFn | None = None) -> EncodedTimeline:
+    """Lay *shots* on one timeline, mix their audio and encode H.264/AAC to *video_path*.
+
+    *work* is a scratch directory (frames + audio mix) owned by the caller.
+    """
+    # ── Global timeline ────────────────────────────────────────────
+    starts: list[float] = []
+    placed_audio: list[tuple[str, float]] = []
+    cues_en: list[TimedCue] = []
+    cues_vi: list[TimedCue] = []
+    segments: list[dict] = []
+    speech: list[dict] = []
+    t = 0.0
+    for shot in shots:
+        starts.append(t)
+        placed_audio.extend((a.path, t + a.start) for a in shot.audio)
+        speech.extend(
+            {"start": round(t + a.start, 2), "end": round(t + a.start + a.duration, 2),
+             "segment": shot.segment, "voice": a.voice, "text": a.text}
+            for a in shot.audio if a.text
+        )
+        for s in shot.subs:
+            cues_en.append(TimedCue(t + s.start, t + s.end, s.en))
+            cues_vi.append(TimedCue(t + s.start, t + s.end, s.vi))
+        if segments and segments[-1]["name"] == shot.segment:
+            segments[-1]["end"] = round(t + shot.duration, 3)
+        else:
+            segments.append({"name": shot.segment, "start": round(t, 3), "end": round(t + shot.duration, 3)})
+        t += shot.duration
+    total = t
+
+    # ── Frames → PNG (memory stays flat) ───────────────────────────
+    frame_paths = []
+    for i, shot in enumerate(shots):
+        p = os.path.join(work, f"frame_{i:04d}.png")
+        cv_apply_logo(shot.image, cfg).convert("RGB").save(p, compress_level=1)
+        frame_paths.append(p)
+
+    # ── Audio mix ──────────────────────────────────────────────────
+    if progress_cb:
+        progress_cb("audio", 0, 1)
+    mix_path = mix_audio(placed_audio, total, os.path.join(work, "mix.wav"))
+    if progress_cb:
+        progress_cb("audio", 1, 1)
+
+    # ── Encode ─────────────────────────────────────────────────────
+    audio = AudioFileClip(mix_path)
+    clip = VideoClip(_FrameSource(frame_paths, starts), duration=total).with_fps(cfg.fps).with_audio(audio)
+    try:
+        clip.write_videofile(
+            video_path,
+            fps=cfg.fps,
+            codec="libx264",
+            audio_codec="aac",
+            preset=cfg.preset,
+            threads=os.cpu_count() or 2,
+            pixel_format="yuv420p",          # widest player compatibility
+            ffmpeg_params=["-movflags", "+faststart"],  # progressive playback
+            logger=_make_logger(progress_cb),
+        )
+    finally:
+        clip.close()
+        audio.close()
+    return EncodedTimeline(total, segments, speech, cues_en, cues_vi, len(frame_paths))
+
+
 def _copy_assets(lesson: Lesson, lesson_dir: str) -> None:
     """Copy referenced images next to the exported lesson.json (same relative paths)."""
     for _, rel in lesson.asset_refs():
@@ -297,69 +374,13 @@ def render_lesson_video(
         if not shots:
             raise ValueError("Bài học không có nội dung để dựng video.")
 
-        # ── Global timeline ────────────────────────────────────────────
-        starts: list[float] = []
-        placed_audio: list[tuple[str, float]] = []
-        cues_en: list[TimedCue] = []
-        cues_vi: list[TimedCue] = []
-        segments: list[dict] = []
-        speech: list[dict] = []
-        t = 0.0
-        for shot in shots:
-            starts.append(t)
-            placed_audio.extend((a.path, t + a.start) for a in shot.audio)
-            speech.extend(
-                {"start": round(t + a.start, 2), "end": round(t + a.start + a.duration, 2),
-                 "segment": shot.segment, "voice": a.voice, "text": a.text}
-                for a in shot.audio if a.text
-            )
-            for s in shot.subs:
-                cues_en.append(TimedCue(t + s.start, t + s.end, s.en))
-                cues_vi.append(TimedCue(t + s.start, t + s.end, s.vi))
-            if segments and segments[-1]["name"] == shot.segment:
-                segments[-1]["end"] = round(t + shot.duration, 3)
-            else:
-                segments.append({"name": shot.segment, "start": round(t, 3), "end": round(t + shot.duration, 3)})
-            t += shot.duration
-        total = t
-
-        # ── Frames → PNG (memory stays flat) ───────────────────────────
-        frame_paths = []
-        for i, shot in enumerate(shots):
-            p = os.path.join(work, f"frame_{i:04d}.png")
-            cv_apply_logo(shot.image, cfg).convert("RGB").save(p, compress_level=1)
-            frame_paths.append(p)
         thumb_path = os.path.join(lesson_dir, "thumbnail.png")
         shots[0].image.convert("RGB").save(thumb_path)
-        del shots
-
-        # ── Audio mix ──────────────────────────────────────────────────
-        if progress_cb:
-            progress_cb("audio", 0, 1)
-        mix_path = mix_audio(placed_audio, total, os.path.join(work, "mix.wav"))
-        if progress_cb:
-            progress_cb("audio", 1, 1)
-
-        # ── Encode ─────────────────────────────────────────────────────
         base_name = safe_filename(video_name or lesson.meta.title_en, default=lesson.lesson_id)
         video_path = resolve_output_path(base_name, "mp4", lesson_dir, overwrite=True)
-        audio = AudioFileClip(mix_path)
-        clip = VideoClip(_FrameSource(frame_paths, starts), duration=total).with_fps(cfg.fps).with_audio(audio)
-        try:
-            clip.write_videofile(
-                video_path,
-                fps=cfg.fps,
-                codec="libx264",
-                audio_codec="aac",
-                preset=cfg.preset,
-                threads=os.cpu_count() or 2,
-                pixel_format="yuv420p",          # widest player compatibility
-                ffmpeg_params=["-movflags", "+faststart"],  # progressive playback
-                logger=_make_logger(progress_cb),
-            )
-        finally:
-            clip.close()
-            audio.close()
+        tl = encode_shots(shots, cfg, video_path, work, progress_cb)
+        del shots
+        total, segments, speech, cues_en, cues_vi = tl.duration, tl.segments, tl.speech, tl.cues_en, tl.cues_vi
 
         # ── Side artefacts ─────────────────────────────────────────────
         srt_en = write_srt(cues_en, os.path.join(lesson_dir, "subtitles.en.srt"))
@@ -378,7 +399,7 @@ def render_lesson_video(
             "subtitles": {"en": os.path.basename(srt_en), "vi": os.path.basename(srt_vi)},
             "thumbnail": os.path.basename(thumb_path),
             "segments": segments,
-            "shots": len(frame_paths),
+            "shots": tl.shots,
             "tts_fallbacks": getattr(tts, "fallbacks", []),
             "speech": speech,
             "render_config": cfg.to_dict(),

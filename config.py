@@ -155,6 +155,8 @@ DB_PATH = os.environ.get("VIDEO_APP_DB", os.path.join(DATA_DIR, "app.db"))
 TTS_CACHE_DIR = os.path.join(DATA_DIR, "tts_cache")
 LESSON_OUTPUT_DIR = os.path.join(OUTPUT_DIR, "lessons")
 SAMPLES_DIR = os.path.join(BASE_DIR, "samples", "lessons")
+SCENE_OUTPUT_DIR = os.path.join(OUTPUT_DIR, "scenes")
+SCENE_SAMPLES_DIR = os.path.join(BASE_DIR, "samples", "scenes")
 
 # Channel logo (watermark at the bottom centre of every lesson-video frame)
 BRAND_DIR = os.path.join(ASSETS_DIR, "brand")
