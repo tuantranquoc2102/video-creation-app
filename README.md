@@ -7,6 +7,7 @@
 - **🎓 Video bài học song ngữ (mới)** — Từ 1 file Lesson JSON tạo video 4 phần: hội thoại song ngữ Anh–Việt (tô màu từ vựng) → 10 thẻ từ vựng (IPA, nghĩa, câu gốc) → bài tập tự nhớ (đếm ngược + đáp án) → ôn tập. Xuất kèm phụ đề EN/VI, thumbnail, manifest. Xem [docs/03](docs/03-phase-0-1-implementation.md)
 - **Video hội thoại 2 người** — Upload CSV với 2 speaker, tự động tạo video với bubble chat hoặc plain text, hiệu ứng bong bóng tail, per-speaker voice selection
 - **Video từ vựng (Flashcard)** — Upload CSV từ vựng (english/ipa/vietnam/example/translate), tạo video flashcard
+- **🔗 Ghép video** — Upload nhiều video, sắp xếp thứ tự, ghép thành 1 video (tự co giãn khác kích thước/FPS, bù im lặng cho clip không có tiếng); tùy chọn chèn logo ở giữa phía dưới (logo kênh mặc định hoặc upload, chỉnh kích thước/độ đậm/khoảng cách đáy)
 - **Text-to-Speech** — Hỗ trợ Edge TTS (13 giọng en-US nam/nữ) và gTTS
 - **Tùy chỉnh hiển thị** — Font size, font color, padding top, bubble chat toggle, live preview trước khi tạo
 - **Hình nền linh hoạt** — Màu đơn sắc, upload hình ảnh, hoặc chọn từ thư viện `assets/`
@@ -28,6 +29,7 @@ video-creation-app/
 │   ├── utils.py            # Tên file an toàn, codec, MIME, IPA…
 │   ├── tts_service.py      # gTTS + Edge TTS wrapper, cache + retry
 │   ├── video_service.py    # CSV parsing, detect, business helpers
+│   ├── video_join.py       # Ghép video + logo (ffmpeg 1 lượt)
 │   ├── lesson/             # Lesson JSON: schema, validators, importers
 │   ├── render/             # Dựng video bài học bằng Pillow + MoviePy
 │   │   └── segments/       # intro, dialogue, vocab, exercise, outro
@@ -47,6 +49,7 @@ video-creation-app/
 │       ├── dashboard.py    # Dashboard — metrics, chart, recent activity
 │       ├── lesson_video.py # Trang tạo video bài học song ngữ
 │       ├── dialogue_video.py  # Trang tạo video hội thoại (dedicated)
+│       ├── join_video.py      # Trang ghép video + logo
 │       ├── create_video.py    # Trang tạo video chung (text/txt/csv)
 │       └── manage_videos.py   # Quản lý video — filter, delete, export
 ├── samples/lessons/        # Lesson JSON mẫu
