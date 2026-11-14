@@ -3,7 +3,7 @@
 import streamlit as st
 
 from ui.navigation import NAV_STATE_KEY
-from ui.router import DISPLAY_NAMES
+from ui import router
 
 _APP_VERSION = "1.1"
 
@@ -15,7 +15,7 @@ def render_sidebar() -> str:
         st.markdown("---")
         selected = st.radio(
             "📌 Điều hướng",
-            DISPLAY_NAMES,
+            router.DISPLAY_NAMES,  # read at render time so newly added routes survive hot-reload
             key=NAV_STATE_KEY,
             label_visibility="collapsed",
         )
