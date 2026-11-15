@@ -107,13 +107,14 @@ class Story(_Model):
         return next((i for i, c in enumerate(self.characters) if c.id == char_id), 0)
 
     def default_layout(self, char_id: str) -> BubbleLayout:
-        """Characters spread left → right near the top, tails pointing down at them."""
+        """Characters spread left → right near the top; tails lean towards each one's side."""
         n = len(self.characters)
         if n == 1:
             return BubbleLayout()
         spread = min(0.46, 0.7 / (n - 1))
-        x = 0.5 + (self.char_index(char_id) - (n - 1) / 2) * spread
-        return BubbleLayout(x=round(x, 3), y=0.2, tail="down")
+        x = round(0.5 + (self.char_index(char_id) - (n - 1) / 2) * spread, 3)
+        tail = "down-left" if x < 0.5 else "down-right" if x > 0.5 else "down"
+        return BubbleLayout(x=x, y=0.2, tail=tail)
 
     def layout(self, scene_idx: int, char_id: str) -> BubbleLayout:
         return self.scenes[scene_idx].bubbles.get(char_id) or self.default_layout(char_id)

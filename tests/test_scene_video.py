@@ -49,8 +49,8 @@ def test_sample_story_parses(story):
     assert len(story.scenes) == 3 and story.turn_count == 10
     assert story.scenes[0].speakers() == ["B", "A"]
     assert story.layout(0, "A").x == 0.3                       # from the JSON
-    a, b = story.layout(1, "A"), story.layout(1, "B")           # defaults: left / right, tail down
-    assert a.x < 0.5 < b.x and a.tail == b.tail == "down"
+    a, b = story.layout(1, "A"), story.layout(1, "B")           # defaults: left / right, tails lean outwards
+    assert a.x < 0.5 < b.x and (a.tail, b.tail) == ("down-left", "down-right")
 
 
 def test_roundtrip_keeps_layout(story):

@@ -208,9 +208,9 @@ def _render_settings(story: Story) -> tuple[RenderConfig, SceneStyle, str]:
             idx = font_names.index(DEFAULT_FONT_NAME) if DEFAULT_FONT_NAME in font_names else 0
             font_path = FONTS[st.selectbox("Font chữ:", font_names, index=idx, key="scn_font")]
     with c2:
-        font_scale = st.slider("Cỡ chữ (%):", 60, 160, 100, step=5, key="scn_font_scale") / 100
+        font_scale = st.slider("Cỡ chữ (%):", 60, 160, 90, step=5, key="scn_font_scale") / 100
     with c3:
-        bubble_width = st.slider("Độ rộng bubble tối đa (% khung):", 30, 90, 62, key="scn_bubble_w") / 100
+        bubble_width = st.slider("Độ rộng bubble tối đa (% khung):", 30, 90, 70, key="scn_bubble_w") / 100
     with c4:
         tail_length = st.slider("Độ dài mũi tên (%):", 40, 250, 100, step=10, key="scn_tail_len") / 100
 
@@ -234,7 +234,7 @@ def _render_settings(story: Story) -> tuple[RenderConfig, SceneStyle, str]:
         narrator_vi = _voice_select("Giọng tiếng Việt:", SPEAKER_VOICES_VI, _VI_VOICE_BY_ID,
                                     DEFAULT_VOICE_VI, key="scn_narr_vi")
     with c3:
-        show_logo = st.toggle("Hiện logo kênh (giữa, dưới)", value=False, key="scn_logo",
+        show_logo = st.toggle("Hiện logo kênh (giữa, dưới)", value=DEFAULT_LOGO is not None, key="scn_logo",
                               disabled=DEFAULT_LOGO is None)
 
     name = st.text_input("Tên file video:", value=story.title_en, key=f"scn_name_{story.story_id}",
