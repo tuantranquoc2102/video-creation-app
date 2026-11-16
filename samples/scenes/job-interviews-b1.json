@@ -1,0 +1,262 @@
+{
+  "lesson_id": "job-interviews-b1",
+  "schema_version": 3,
+  "meta": {
+    "topic": "Job Interviews",
+    "level": "B1",
+    "title_en": "A Job Interview",
+    "title_vi": "Buổi phỏng vấn xin việc",
+    "learning_goal_vi": "Học cách giới thiệu bản thân, trình bày kinh nghiệm làm việc, trả lời câu hỏi về kỹ năng và tìm hiểu các bước tiếp theo trong buổi phỏng vấn bằng tiếng Anh."
+  },
+  "characters": [
+    {
+      "id": "A",
+      "name": "Mia",
+      "gender": "female",
+      "voice_id": "en-US-JennyNeural",
+      "visual_description": "Young adult Vietnamese woman with short dark-brown bob hair, warm brown eyes, and a friendly, confident expression. Wearing a cream blazer over a white blouse, tailored navy trousers, black low-heeled shoes, and carrying a slim beige document folder. Her hairstyle, face, outfit, and accessories remain identical throughout all three scenes.",
+      "role": "Job candidate interviewing for a software developer position"
+    },
+    {
+      "id": "B",
+      "name": "Alex",
+      "gender": "male",
+      "voice_id": "en-US-GuyNeural",
+      "visual_description": "Young adult Vietnamese man with short neat black hair, warm brown eyes, and a calm professional expression. Wearing a dark navy business suit, light blue dress shirt, charcoal tie, polished black shoes, and a silver wristwatch. His hairstyle, face, outfit, and accessories remain identical throughout all three scenes.",
+      "role": "Hiring manager interviewing Mia for a software developer position"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": 1,
+      "setting_en": "Inside a modern technology company's interview room on a weekday morning. Mia meets Alex for her software developer job interview.",
+      "image_prompt": "modern Japanese slice-of-life anime style, inspired by Makoto Shinkai and Studio Ghibli. Vertical 9:16 cinematic composition, 1080x1920. Inside an elegant modern technology company interview room on a bright weekday morning. The room features floor-to-ceiling glass windows overlooking a modern city skyline, a polished light oak meeting table, comfortable charcoal office chairs, a closed silver laptop, a small notebook, a glass water bottle, minimalist indoor plants, and warm contemporary office lighting. Mia, a young adult Vietnamese woman with short dark-brown bob hair and warm brown eyes, wears a cream blazer over a white blouse, tailored navy trousers, and black low-heeled shoes. She holds a slim beige document folder containing her resume and stands beside the visitor chair, smiling politely as she introduces herself at the beginning of a job interview. Alex, a young adult Vietnamese man with short neat black hair and warm brown eyes, wears a dark navy business suit, light blue dress shirt, charcoal tie, polished black shoes, and a silver wristwatch. He stands on the opposite side of the meeting table as the hiring manager, welcoming Mia and gesturing toward the visitor chair with an open hand. Alex is clearly the interviewer and Mia is clearly the job candidate. They are meeting for the first time in this professional setting. Neither character is seated yet. The room is a private interview room, not an open office or reception area. Medium-wide cinematic three-quarter camera composition showing both characters, their full outfits, the meeting table, and the recognizable office environment. Detailed anime architecture, realistic professional clothing, natural human gestures, expressive warm brown eyes, subtle facial emotions, beautiful soft morning sunlight, gentle shadows, sophisticated cinematic depth of field, elegant neutral colors, and a welcoming professional atmosphere. The scene must clearly represent the beginning of a software developer job interview. No hotel, classroom, restaurant, airport, hospital, or unrelated location. No additional people, readable documents, company logos, or visible writing. No text, no speech bubbles. --ar 9:16",
+      "dialogue": [
+        {
+          "speaker": "A",
+          "en": "Hello, I'm here for the interview.",
+          "vi": "Xin chào, tôi đến để tham gia buổi phỏng vấn."
+        },
+        {
+          "speaker": "B",
+          "en": "Welcome, Mia. Please sit down.",
+          "vi": "Chào mừng Mia. Mời bạn ngồi."
+        },
+        {
+          "speaker": "A",
+          "en": "Is this the developer role?",
+          "vi": "Đây có phải vị trí lập trình viên không?"
+        },
+        {
+          "speaker": "B",
+          "en": "Yes. What's your experience?",
+          "vi": "Đúng vậy. Bạn có kinh nghiệm gì?"
+        }
+      ],
+      "total_english_words": 20,
+      "estimated_speech_seconds": 9
+    },
+    {
+      "scene_id": 2,
+      "setting_en": "A few minutes later, inside the same technology company interview room. Mia explains her software development experience while Alex asks about deadlines and teamwork.",
+      "image_prompt": "modern Japanese slice-of-life anime style, inspired by Makoto Shinkai and Studio Ghibli. Vertical 9:16 cinematic composition, 1080x1920. A direct continuation of Scene 1 inside the exact same modern technology company interview room on the same weekday morning. Preserve the identical floor-to-ceiling glass windows, city skyline view, polished light oak meeting table, charcoal office chairs, silver laptop, small notebook, glass water bottle, indoor plants, and warm professional lighting. Mia is the identical young adult Vietnamese woman with short dark-brown bob hair and warm brown eyes, wearing the exact same cream blazer over a white blouse, tailored navy trousers, and black low-heeled shoes. She is now seated in the visitor chair on one side of the meeting table, explaining her previous software development experience with a confident but natural expression. Her slim beige document folder lies open on the table, showing blank resume pages without readable writing. Alex is the identical young adult Vietnamese man with short neat black hair and warm brown eyes, wearing the exact same dark navy business suit, light blue dress shirt, charcoal tie, polished black shoes, and silver wristwatch. He sits across from Mia as the hiring manager, listening carefully and asking professional questions about meeting deadlines and working in a team. Alex has a small notebook and pen on the table in front of him. His silver laptop remains closed. Both characters maintain their established professional roles and sit in natural face-to-face interview positions. Mia makes a gentle explanatory hand gesture while Alex listens attentively. The scene focuses on discussing software development experience, task planning, deadlines, and teamwork. Cinematic medium shot from a slightly elevated three-quarter camera angle, capturing both characters' faces, upper bodies, the meeting table, resume folder, and recognizable office background. Maintain strict facial identity, hairstyle, outfit, furniture, lighting, object placement, and chronological continuity from Scene 1. Beautiful Japanese anime character design, realistic office details, accurate human anatomy, expressive warm brown eyes, natural professional body language, soft morning sunlight, subtle shadows, cinematic depth of field, and sophisticated balanced colors. No unrelated people, coffee shop, hotel, classroom, airport, or outdoor setting. No readable resume content, signs, or computer text. No text, no speech bubbles. --ar 9:16",
+      "dialogue": [
+        {
+          "speaker": "A",
+          "en": "I've built websites for two years.",
+          "vi": "Tôi đã phát triển các trang web được hai năm."
+        },
+        {
+          "speaker": "B",
+          "en": "How do you handle deadlines?",
+          "vi": "Bạn xử lý các thời hạn công việc như thế nào?"
+        },
+        {
+          "speaker": "A",
+          "en": "I plan tasks and track progress.",
+          "vi": "Tôi lên kế hoạch công việc và theo dõi tiến độ."
+        },
+        {
+          "speaker": "B",
+          "en": "Good. Do you enjoy teamwork?",
+          "vi": "Tốt. Bạn có thích làm việc nhóm không?"
+        }
+      ],
+      "total_english_words": 22,
+      "estimated_speech_seconds": 10
+    },
+    {
+      "scene_id": 3,
+      "setting_en": "Near the end of the same interview, Mia and Alex discuss teamwork, her availability to start the job, and the next step in the hiring process.",
+      "image_prompt": "modern Japanese slice-of-life anime style, inspired by Makoto Shinkai and Studio Ghibli. Vertical 9:16 cinematic composition, 1080x1920. Near the end of the same software developer job interview, inside the exact same modern technology company interview room on the same weekday morning. Preserve the identical floor-to-ceiling glass windows, modern city skyline, polished light oak meeting table, charcoal office chairs, closed silver laptop, small notebook, glass water bottle, and minimalist indoor plants from Scenes 1 and 2. The morning light remains warm and natural with subtle soft shadows across the meeting table. Mia is the identical young adult Vietnamese woman with short dark-brown bob hair and warm brown eyes, wearing her exact same cream blazer over a white blouse, tailored navy trousers, and black low-heeled shoes. She remains seated in the same visitor chair and looks confident and interested while discussing her experience with teamwork and her availability to start a new position next month. Her slim beige document folder remains open on the meeting table. Alex is the identical young adult Vietnamese man with short neat black hair and warm brown eyes, wearing the same dark navy business suit, light blue dress shirt, charcoal tie, polished black shoes, and silver wristwatch. He remains seated opposite Mia as the hiring manager, looking pleased with her answers while explaining that the company will contact her by email on Friday. Alex holds a pen beside his notebook and makes a calm professional gesture toward Mia. Both characters maintain the same positions, facial features, hairstyles, and business outfits established in the previous scene. The interview is ending positively, but no hiring decision or job offer has been made. Do not depict a handshake, signed contract, or successful hiring confirmation. The scene captures a natural conversation before the participants stand up to leave. Cinematic medium close-up three-quarter composition from Mia's side of the table, showing both faces, the document folder, notebook, closed laptop, and familiar office setting. Detailed Japanese anime environment, realistic professional clothing textures, natural human gestures, accurate hand anatomy, expressive warm brown eyes, gentle morning sunlight, sophisticated soft shadows, cinematic depth of field, and a calm professional atmosphere. Strict continuity with Scenes 1 and 2, no change of location or wardrobe. No additional people, hotel, restaurant, classroom, airport, or unrelated objects. No readable writing, company logos, or signs. No text, no speech bubbles. --ar 9:16",
+      "dialogue": [
+        {
+          "speaker": "A",
+          "en": "Yes, I enjoy solving problems together.",
+          "vi": "Có, tôi thích cùng mọi người giải quyết vấn đề."
+        },
+        {
+          "speaker": "B",
+          "en": "Great. Can you start next month?",
+          "vi": "Tốt lắm. Bạn có thể bắt đầu vào tháng tới không?"
+        },
+        {
+          "speaker": "A",
+          "en": "Yes. What happens next?",
+          "vi": "Có. Bước tiếp theo là gì?"
+        },
+        {
+          "speaker": "B",
+          "en": "We'll email you on Friday.",
+          "vi": "Chúng tôi sẽ gửi email cho bạn vào thứ Sáu."
+        }
+      ],
+      "total_english_words": 21,
+      "estimated_speech_seconds": 10
+    }
+  ],
+  "vocabulary": [
+    {
+      "word": "interview",
+      "ipa": "/ˈɪntərvjuː/",
+      "pos": "noun",
+      "meaning_vi": "buổi phỏng vấn",
+      "scene_idx": 1
+    },
+    {
+      "word": "role",
+      "ipa": "/roʊl/",
+      "pos": "noun",
+      "meaning_vi": "vị trí, vai trò công việc",
+      "scene_idx": 1
+    },
+    {
+      "word": "experience",
+      "ipa": "/ɪkˈspɪriəns/",
+      "pos": "noun",
+      "meaning_vi": "kinh nghiệm",
+      "scene_idx": 1
+    },
+    {
+      "word": "developer",
+      "ipa": "/dɪˈveləpər/",
+      "pos": "noun",
+      "meaning_vi": "lập trình viên",
+      "scene_idx": 1
+    },
+    {
+      "word": "handle",
+      "ipa": "/ˈhændəl/",
+      "pos": "verb",
+      "meaning_vi": "xử lý, giải quyết",
+      "scene_idx": 2
+    },
+    {
+      "word": "deadline",
+      "ipa": "/ˈdedlaɪn/",
+      "pos": "noun",
+      "meaning_vi": "thời hạn hoàn thành công việc",
+      "scene_idx": 2
+    },
+    {
+      "word": "task",
+      "ipa": "/tæsk/",
+      "pos": "noun",
+      "meaning_vi": "nhiệm vụ, công việc",
+      "scene_idx": 2
+    },
+    {
+      "word": "progress",
+      "ipa": "/ˈprɑːɡres/",
+      "pos": "noun",
+      "meaning_vi": "tiến độ",
+      "scene_idx": 2
+    },
+    {
+      "word": "teamwork",
+      "ipa": "/ˈtiːmwɝːk/",
+      "pos": "noun",
+      "meaning_vi": "làm việc nhóm",
+      "scene_idx": 2
+    },
+    {
+      "word": "solve",
+      "ipa": "/sɑːlv/",
+      "pos": "verb",
+      "meaning_vi": "giải quyết vấn đề",
+      "scene_idx": 3
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "multiple_choice",
+      "prompt_en": "What position is Mia applying for?",
+      "prompt_vi": "Mia đang ứng tuyển vị trí nào?",
+      "options": [
+        "Software developer",
+        "Graphic designer",
+        "Sales manager",
+        "English teacher"
+      ],
+      "answer": "Software developer",
+      "explanation_vi": "Mia hỏi về vị trí developer và Alex xác nhận đây là vị trí lập trình viên.",
+      "think_seconds": 5
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "prompt_en": "How do you handle _____?",
+      "prompt_vi": "Điền từ còn thiếu: Bạn xử lý thời hạn công việc như thế nào?",
+      "options": [
+        "deadlines",
+        "interviews",
+        "websites",
+        "emails"
+      ],
+      "answer": "deadlines",
+      "explanation_vi": "'Deadline' là thời hạn hoàn thành công việc. 'Handle deadlines' nghĩa là xử lý hoặc quản lý các thời hạn công việc.",
+      "think_seconds": 5
+    },
+    {
+      "id": "ex3",
+      "type": "translate_vi_en",
+      "prompt_en": "Translate into English: Tôi lên kế hoạch công việc và theo dõi tiến độ.",
+      "prompt_vi": "Dịch sang tiếng Anh: Tôi lên kế hoạch công việc và theo dõi tiến độ.",
+      "options": [],
+      "answer": "I plan tasks and track progress.",
+      "explanation_vi": "'Plan tasks' nghĩa là lên kế hoạch công việc và 'track progress' nghĩa là theo dõi tiến độ.",
+      "think_seconds": 10
+    },
+    {
+      "id": "ex4",
+      "type": "comprehension",
+      "prompt_en": "How much experience does Mia have building websites?",
+      "prompt_vi": "Mia có bao nhiêu năm kinh nghiệm phát triển website?",
+      "options": [
+        "One year",
+        "Two years",
+        "Three years",
+        "Five years"
+      ],
+      "answer": "Two years",
+      "explanation_vi": "Mia nói 'I've built websites for two years', nghĩa là cô ấy đã phát triển website trong hai năm.",
+      "think_seconds": 5
+    },
+    {
+      "id": "ex5",
+      "type": "multiple_choice",
+      "prompt_en": "When will the company email Mia?",
+      "prompt_vi": "Khi nào công ty sẽ gửi email cho Mia?",
+      "options": [
+        "On Monday",
+        "On Wednesday",
+        "On Friday",
+        "Next month"
+      ],
+      "answer": "On Friday",
+      "explanation_vi": "Alex nói 'We'll email you on Friday', nghĩa là công ty sẽ gửi email vào thứ Sáu.",
+      "think_seconds": 5
+    }
+  ]
+}

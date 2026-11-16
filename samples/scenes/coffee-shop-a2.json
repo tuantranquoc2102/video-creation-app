@@ -1,0 +1,46 @@
+{
+  "story_id": "coffee-shop-a2",
+  "title_en": "A Rainy Day at the Coffee Shop",
+  "title_vi": "Một ngày mưa ở quán cà phê",
+  "characters": [
+    { "id": "A", "name": "Anna", "gender": "female", "voice": "en-US-AvaNeural" },
+    { "id": "B", "name": "Tom", "gender": "male", "voice": "en-US-AndrewNeural" }
+  ],
+  "scenes": [
+    {
+      "id": "order",
+      "title_vi": "Gọi món",
+      "image": "scene-1-order.png",
+      "dialogue": [
+        { "speaker": "B", "en": "Good morning! What can I get for you?", "vi": "Chào buổi sáng! Chị dùng gì ạ?" },
+        { "speaker": "A", "en": "A hot latte, please. It's so cold outside.", "vi": "Cho tôi một ly latte nóng. Ngoài trời lạnh quá." },
+        { "speaker": "B", "en": "Sure. Would you like anything to eat?", "vi": "Vâng ạ. Chị có muốn ăn gì không?" },
+        { "speaker": "A", "en": "Yes, a chocolate muffin, please.", "vi": "Có, cho tôi một bánh muffin sô-cô-la." }
+      ],
+      "bubbles": {
+        "A": { "x": 0.3, "y": 0.2, "tail": "down" },
+        "B": { "x": 0.7, "y": 0.2, "tail": "down" }
+      }
+    },
+    {
+      "id": "pay",
+      "title_vi": "Thanh toán",
+      "image": "scene-2-pay.png",
+      "dialogue": [
+        { "speaker": "B", "en": "That's six dollars in total.", "vi": "Tổng cộng là sáu đô la ạ." },
+        { "speaker": "A", "en": "Can I pay by card?", "vi": "Tôi trả bằng thẻ được không?" },
+        { "speaker": "B", "en": "Of course. Please tap your card here.", "vi": "Tất nhiên rồi. Chị chạm thẻ vào đây nhé." }
+      ]
+    },
+    {
+      "id": "seat",
+      "title_vi": "Tìm chỗ ngồi",
+      "image": "scene-3-seat.png",
+      "dialogue": [
+        { "speaker": "A", "en": "Is the seat by the window free?", "vi": "Chỗ ngồi cạnh cửa sổ còn trống không?" },
+        { "speaker": "B", "en": "Yes, it is. I'll bring your order over.", "vi": "Còn ạ. Em sẽ mang đồ ra cho chị." },
+        { "speaker": "A", "en": "Thank you. You're very kind!", "vi": "Cảm ơn em. Em thật chu đáo!" }
+      ]
+    }
+  ]
+}
