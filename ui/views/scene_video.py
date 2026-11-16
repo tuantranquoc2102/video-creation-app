@@ -35,6 +35,7 @@ from core.scene_video import (
     Story,
     StoryLoadError,
     draw_scene_frame,
+    lesson_preview_frames,
     list_sample_stories,
     load_story_file,
     parse_story,
@@ -103,11 +104,14 @@ def _render_summary(story: Story) -> None:
     c1.metric("🎬 Phân cảnh", len(story.scenes))
     c2.metric("💬 Lượt thoại", story.turn_count)
     c3.metric("🧑‍🤝‍🧑 Nhân vật", len(story.characters))
-    extras = story.extras()
-    if extras:
-        labels = {"vocabulary": "từ vựng", "exercises": "bài tập"}
-        st.caption("ℹ️ File còn có " + " và ".join(f"{n} {labels[k]}" for k, n in extras.items())
-                   + " – trang này chỉ dựng phần hội thoại theo phân cảnh; các phần đó được giữ nguyên khi tải lại JSON.")
+    if story.vocabulary or story.exercises:
+        st.caption(f"📖 File có **{len(story.vocabulary)} từ vựng** và **{len(story.exercises)} bài tập** – "
+                   "được dựng thành phần Từ vựng và Bài tập sau các phân cảnh (bật/tắt ở phần Cài đặt).")
+    no_example = story.vocab_without_example()
+    if no_example:
+        st.warning("⚠️ Không tìm thấy các từ này trong hội thoại nên câu ví dụ sẽ không được tô màu từ: "
+                   + ", ".join(f"`{w}`" for w in no_example)
+                   + ". Thêm `example_en` / `example_vi` cho từ đó nếu muốn dùng câu ví dụ riêng.")
     names = {c.id: c.name for c in story.characters}
     with st.expander("Xem nội dung hội thoại"):
         st.dataframe(
@@ -117,6 +121,27 @@ def _render_summary(story: Story) -> None:
             ]),
             use_container_width=True, hide_index=True,
         )
+    if story.vocabulary:
+        turns = story.flat_dialogue()
+        with st.expander(f"Xem từ vựng ({len(story.vocabulary)})"):
+            st.dataframe(
+                pd.DataFrame([
+                    {"Từ": v.word, "IPA": f"/{v.ipa}/", "Loại từ": v.pos, "Nghĩa": v.meaning_vi,
+                     "Câu ví dụ": v.example_en or turns[v.dialogue_idx].en}
+                    for v in story.vocabulary
+                ]),
+                use_container_width=True, hide_index=True,
+            )
+    if story.exercises:
+        with st.expander(f"Xem bài tập ({len(story.exercises)})"):
+            st.dataframe(
+                pd.DataFrame([
+                    {"Loại": e.type, "Câu hỏi": e.prompt_en or e.prompt_vi or "", "Lựa chọn": " | ".join(e.options),
+                     "Đáp án": e.answer, "Giây suy nghĩ": e.think_seconds}
+                    for e in story.exercises
+                ]),
+                use_container_width=True, hide_index=True,
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -237,10 +262,35 @@ def _render_settings(story: Story) -> tuple[RenderConfig, SceneStyle, str]:
         show_logo = st.toggle("Hiện logo kênh (giữa, dưới)", value=DEFAULT_LOGO is not None, key="scn_logo",
                               disabled=DEFAULT_LOGO is None)
 
+    base = RenderConfig()
+    lesson_opts: dict = {}
+    with_vocab = with_exercises = False
+    if story.vocabulary or story.exercises:
+        st.markdown("#### 📖 Từ vựng & bài tập")
+        st.caption("Dựng sau các phân cảnh, giống trang Video Bài Học. Mỗi từ: đọc từ N lần (luân phiên 2 giọng) "
+                   "→ nghĩa tiếng Việt → câu ví dụ N lần → bản dịch. Mỗi bài tập: câu hỏi → đếm ngược → đáp án.")
+        c1, c2 = st.columns(2)
+        with c1:
+            with_vocab = st.toggle(f"Thêm phần từ vựng ({len(story.vocabulary)} từ)", value=bool(story.vocabulary),
+                                   key="scn_with_vocab", disabled=not story.vocabulary)
+            vv1 = _voice_select("Giọng đọc từ vựng 1:", SPEAKER_VOICES, _EN_VOICE_BY_ID, base.vocab_voices[0],
+                                key="scn_vv1")
+            word_repeat = st.slider("Số lần đọc từ vựng:", 1, 4, base.word_repeat, key="scn_word_repeat")
+            read_example_vi = st.toggle("Đọc bản dịch tiếng Việt của câu ví dụ", value=True, key="scn_ex_vi")
+        with c2:
+            with_exercises = st.toggle(f"Thêm phần bài tập ({len(story.exercises)} bài)", value=bool(story.exercises),
+                                       key="scn_with_ex", disabled=not story.exercises)
+            vv2 = _voice_select("Giọng đọc từ vựng 2:", SPEAKER_VOICES, _EN_VOICE_BY_ID, base.vocab_voices[1],
+                                key="scn_vv2")
+            example_repeat = st.slider("Số lần đọc câu ví dụ:", 1, 4, base.example_repeat, key="scn_ex_repeat")
+            think = st.slider("Thời gian suy nghĩ mỗi bài tập (giây, 0 = theo file):", 0, 15, 0, key="scn_think")
+            tick = st.toggle("Âm 'tích tắc' khi đếm ngược", value=True, key="scn_tick")
+        lesson_opts = dict(vocab_voices=(vv1, vv2), word_repeat=word_repeat, example_repeat=example_repeat,
+                           read_example_vi=read_example_vi, think_seconds=think or None, tick_sound=tick)
+
     name = st.text_input("Tên file video:", value=story.title_en, key=f"scn_name_{story.story_id}",
                          help="Video được lưu trong output/scenes/<story_id>/")
 
-    base = RenderConfig()
     cfg = RenderConfig(
         size=VIDEO_RESOLUTIONS[res],
         fps=int(fps),
@@ -248,9 +298,10 @@ def _render_settings(story: Story) -> tuple[RenderConfig, SceneStyle, str]:
         narrator_vi=narrator_vi,
         voice_overrides=overrides,
         logo_path=DEFAULT_LOGO if show_logo else None,
+        **lesson_opts,
     )
     style = SceneStyle(bubble_width=bubble_width, font_scale=font_scale, tail_length=tail_length,
-                       fit=fit, vi_audio=vi_audio)
+                       fit=fit, vi_audio=vi_audio, vocabulary=with_vocab, exercises=with_exercises)
     return cfg, style, name
 
 
@@ -302,6 +353,12 @@ def _render_review(story: Story, images: dict[int, str], cfg: RenderConfig, styl
                 frame = draw_scene_frame(story, si, turns, images.get(si), pcfg, style)
                 st.image(apply_logo(frame, pcfg).convert("RGB"), use_container_width=True)
 
+    extra = lesson_preview_frames(story, images, pcfg, style)
+    if extra:
+        with st.expander("👁️ Xem trước phần từ vựng & bài tập", expanded=False):
+            for col, (label, frame) in zip(st.columns(len(extra)), extra.items()):
+                col.image(frame, caption=label, use_container_width=True)
+
     st.download_button(
         "💾 Tải JSON kèm vị trí bubble",
         story_to_json(story),
@@ -322,7 +379,7 @@ def _record(story: Story, cfg: RenderConfig, name: str, status: str, output_path
     res_label = next((k for k, v in VIDEO_RESOLUTIONS.items() if v == tuple(cfg.size)), str(cfg.size))
     entry = build_video_entry(
         name=name, resolution=res_label, fps=cfg.fps, fmt="mp4", text_style="Phân cảnh",
-        text_content="\n".join(f"{t.speaker}: {t.en} | {t.vi}" for s in story.scenes for t in s.dialogue),
+        text_content="\n".join(f"{t.speaker}: {t.en} | {t.vi}" for t in story.flat_dialogue()),
         tts_lang="English + Tiếng Việt", tts_speed="Bình thường", tts_engine="Edge TTS",
         bg_mode="Hình phân cảnh", content_type="scene", csv_type="scene",
     )

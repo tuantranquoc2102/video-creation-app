@@ -4,6 +4,7 @@ from core.scene_video.render import (
     SceneRenderResult,
     SceneStyle,
     draw_scene_frame,
+    lesson_preview_frames,
     render_scene_video,
     review_turns,
 )
@@ -30,6 +31,7 @@ __all__ = [
     "Story",
     "StoryLoadError",
     "draw_scene_frame",
+    "lesson_preview_frames",
     "list_sample_stories",
     "load_story_file",
     "parse_story",

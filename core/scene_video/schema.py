@@ -17,8 +17,11 @@ Accepted input (see ``samples/scenes/job-interviews-b1.json``) is the scene-base
 }
 ```
 
-Only ``lesson_id``, ``meta.title_en``, ``characters`` and ``scenes[].dialogue`` are needed here;
-other fields (``visual_description``, ``vocabulary``, ``exercises``…) are kept untouched on export.
+Only ``lesson_id``, ``meta.title_en``, ``characters`` and ``scenes[].dialogue`` are required.
+``vocabulary`` and ``exercises`` (optional) become the vocabulary / practice parts of the video, drawn
+by the same builders as the lesson video; a vocabulary item points at its scene with ``scene_idx``
+(the ``scene_id``) and its example is the line of that scene which uses the word.
+Other fields (``visual_description``…) are ignored and kept untouched on export.
 ``bubbles`` is optional and written by this app: where each character's speech bubble sits in
 that scene (centre of the bubble as a fraction of the frame) and where its tail points.
 
@@ -36,7 +39,8 @@ from typing import Literal, get_args
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, ValidationError, model_validator
 
 from config import SCENE_SAMPLES_DIR
-from core.lesson.schema import Character, Lesson
+from core.lesson.schema import Character, DialogueTurn, Exercise, Lesson, LessonMeta, VocabItem
+from core.lesson.text import find_term_spans
 
 TailDirection = Literal["down", "down-left", "down-right", "up", "up-left", "up-right", "left", "right", "none"]
 TAIL_DIRECTIONS: tuple[str, ...] = get_args(TailDirection)
@@ -81,6 +85,11 @@ class Story(_Model):
     title_vi: str | None = None
     characters: list[Character] = Field(min_length=1, max_length=MAX_CHARACTERS)
     scenes: list[Scene] = Field(min_length=1)
+    # Optional lesson parts; ``VocabItem.dialogue_idx`` indexes the turns of all scenes in order.
+    vocabulary: list[VocabItem] = Field(default_factory=list)
+    exercises: list[Exercise] = Field(default_factory=list)
+    topic: str | None = None
+    level: str | None = None
 
     # The uploaded document when it was a scene-based lesson file – exported back with ``bubbles`` added.
     _source: dict | None = PrivateAttr(default=None)
@@ -97,6 +106,10 @@ class Story(_Model):
             for cid in scene.bubbles:
                 if cid not in ids:
                     raise ValueError(f"scenes[{i}].bubbles: không có nhân vật '{cid}'")
+        turns = sum(len(s.dialogue) for s in self.scenes)
+        for i, item in enumerate(self.vocabulary):
+            if item.dialogue_idx >= turns:
+                raise ValueError(f"vocabulary[{i}].dialogue_idx: vượt quá số lượt thoại ({turns})")
         return self
 
     # -- convenience -------------------------------------------------------
@@ -127,12 +140,39 @@ class Story(_Model):
         """Every character the video draws (names and both languages) – for font coverage checks."""
         parts = [c.name for c in self.characters]
         parts += [text for s in self.scenes for t in s.dialogue for text in (t.en, t.vi)]
-        return "\n".join(parts)
+        parts += [text for v in self.vocabulary
+                  for text in (v.word, v.ipa, v.meaning_vi, v.example_en, v.example_vi)]
+        parts += [text for e in self.exercises
+                  for text in (e.prompt_en, e.prompt_vi, e.answer, e.explanation_vi, *e.options)]
+        return "\n".join(p for p in parts if p)
 
-    def extras(self) -> dict[str, int]:
-        """Sizes of the source sections this video does not render (vocabulary, exercises)."""
-        src = self._source or {}
-        return {k: len(src[k]) for k in ("vocabulary", "exercises") if isinstance(src.get(k), list) and src[k]}
+    def flat_dialogue(self) -> list[SceneTurn]:
+        return [t for s in self.scenes for t in s.dialogue]
+
+    def to_lesson(self, scene_image: str | None = None) -> Lesson:
+        """The story as a :class:`Lesson`, so the lesson video's vocabulary / exercise builders can draw it.
+
+        Built without validation: every part is already validated here, and a story may have
+        1–4 characters or no vocabulary, which the lesson schema does not allow.
+        *scene_image* (optional) is blurred behind the cards, as in the lesson video.
+        """
+        meta = LessonMeta.model_construct(
+            topic=self.topic or self.title_en, level=self.level or "A2", title_en=self.title_en,
+            title_vi=self.title_vi or self.title_en, learning_goal_vi=None,
+            scene_image=os.path.basename(scene_image) if scene_image else None, scene_focus_y=0.4,
+        )
+        lesson = Lesson.model_construct(
+            lesson_id=self.story_id, schema_version=1, meta=meta, characters=list(self.characters),
+            dialogue=[DialogueTurn(speaker=t.speaker, en=t.en, vi=t.vi) for t in self.flat_dialogue()],
+            vocabulary=list(self.vocabulary), exercises=list(self.exercises),
+        )
+        return lesson.set_base_dir(os.path.dirname(os.path.abspath(scene_image)) if scene_image else None)
+
+    def vocab_without_example(self) -> list[str]:
+        """Words whose example line does not contain them (nothing gets highlighted on their card)."""
+        turns = self.flat_dialogue()
+        return [v.word for v in self.vocabulary
+                if not find_term_spans(v.example_en or turns[v.dialogue_idx].en, v.word, v.forms)]
 
 
 # ---------------------------------------------------------------------------
@@ -162,6 +202,10 @@ def _from_lesson(data: dict) -> Story:
             image=lesson.meta.scene_image,
             dialogue=[SceneTurn(speaker=d.speaker, en=d.en, vi=d.vi) for d in lesson.dialogue],
         )],
+        vocabulary=[v.model_copy(update={"image": None}) for v in lesson.vocabulary],
+        exercises=lesson.exercises,
+        topic=lesson.meta.topic,
+        level=lesson.meta.level,
     )
 
 
@@ -171,6 +215,40 @@ def _list(value) -> list:
 
 def _dict(value) -> dict:
     return value if isinstance(value, dict) else {}
+
+
+_VOCAB_KEYS = ("word", "ipa", "pos", "meaning_vi", "forms", "example_en", "example_vi")
+
+
+def _scene_position(scenes: list, ref) -> int | None:
+    """Index of the scene a vocabulary ``scene_idx`` points at: its ``scene_id``, else its 1-based position."""
+    for i, sc in enumerate(scenes):
+        if isinstance(sc, dict) and sc.get("scene_id") is not None and str(sc["scene_id"]) == str(ref):
+            return i
+    if isinstance(ref, int) and not isinstance(ref, bool) and 1 <= ref <= len(scenes):
+        return ref - 1
+    return None
+
+
+def _vocab_item(item, scenes: list):
+    """Vocabulary entry of a scene-based file → :class:`VocabItem` input (``scene_idx`` → ``dialogue_idx``)."""
+    if not isinstance(item, dict):
+        return item
+    out = {k: item[k] for k in _VOCAB_KEYS if item.get(k) is not None}
+    if "dialogue_idx" in item:
+        return {**out, "dialogue_idx": item["dialogue_idx"]}
+    lines = [[t.get("en") if isinstance(t, dict) else None for t in _list(_dict(sc).get("dialogue"))] for sc in scenes]
+    offsets = [sum(len(x) for x in lines[:i]) for i in range(len(lines))]
+
+    def _uses(text) -> bool:
+        return isinstance(text, str) and bool(find_term_spans(text, str(item.get("word") or ""), out.get("forms")))
+
+    pos = _scene_position(scenes, item.get("scene_idx"))
+    order = ([pos] if pos is not None else []) + [i for i in range(len(lines)) if i != pos]
+    hit = next((offsets[i] + j for i in order for j, text in enumerate(lines[i]) if _uses(text)), None)
+    if hit is None and pos is not None:
+        hit = offsets[pos]          # word not found anywhere: fall back to the scene's first line
+    return {**out, "dialogue_idx": hit if hit is not None else item.get("scene_idx")}
 
 
 def _from_scene_lesson(data: dict) -> Story:
@@ -202,6 +280,13 @@ def _from_scene_lesson(data: dict) -> Story:
             if isinstance(sc, dict) else sc
             for sc in _list(data.get("scenes"))
         ],
+        "vocabulary": [_vocab_item(v, _list(data.get("scenes"))) for v in _list(data.get("vocabulary"))],
+        "exercises": [
+            {k: v for k, v in ex.items() if k in Exercise.model_fields} if isinstance(ex, dict) else ex
+            for ex in _list(data.get("exercises"))
+        ],
+        "topic": meta.get("topic") if isinstance(meta.get("topic"), str) else None,
+        "level": meta.get("level") if isinstance(meta.get("level"), str) else None,
     }
     story = Story.model_validate(normalized)
     story._source = data

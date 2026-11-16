@@ -16,6 +16,7 @@ from core.scene_video import (
     SceneStyle,
     StoryLoadError,
     draw_scene_frame,
+    lesson_preview_frames,
     load_story_file,
     parse_story,
     render_scene_video,
@@ -227,8 +228,8 @@ def test_scene_lesson_file_parses(v3_dict):
     assert first.id == "1" and first.setting_en.startswith("Inside a modern technology company")
     assert first.image_prompt.endswith("--ar 9:16")
     assert first.dialogue[0].en == "Hello, I'm here for the interview." and first.speakers() == ["A", "B"]
-    assert story.extras() == {"vocabulary": 10, "exercises": 5}
-    assert "ˈ" not in story.display_text()          # IPA is not drawn → not part of the font check
+    assert (len(story.vocabulary), len(story.exercises)) == (10, 5)
+    assert "ˈ" in story.display_text()              # IPA is drawn on the vocabulary cards → font check
 
 
 def test_scene_lesson_export_keeps_every_field_and_adds_bubbles(v3_dict):
@@ -268,12 +269,12 @@ def test_scene_lesson_renders_with_its_voices(v3_dict, fake_tts, tmp_path):
         Image.new("RGB", (270, 480), BG).save(images[i])
     cfg = RenderConfig(size=(270, 480), fps=10, preset="ultrafast", logo_path=None)
     result = render_scene_video(story, images, cfg, output_root=str(tmp_path / "out"), tts=fake_tts)
-    assert [s["name"] for s in result.segments] == ["scene-1", "scene-2", "scene-3"]
+    assert [s["name"] for s in result.segments] == ["scene-1", "scene-2", "scene-3", "vocabulary", "exercises"]
     assert [(s["voice"], s["text"]) for s in result.speech[:2]] == [
         ("en-US-JennyNeural", "Hello, I'm here for the interview."),
         ("en-US-GuyNeural", "Welcome, Mia. Please sit down."),
     ]
-    assert len(result.speech) == 12
+    assert len([s for s in result.speech if s["segment"].startswith("scene-")]) == 12
     saved = json.load(open(result.story_path, encoding="utf-8"))
     assert saved["schema_version"] == 3 and len(saved["vocabulary"]) == 10
 
@@ -287,6 +288,83 @@ def test_page_with_scene_lesson_sample(tmp_db):
     assert not at.exception, [e.message for e in at.exception]
     assert not at.error
     assert any("Hình ảnh cho 3 phân cảnh" in m.value for m in at.markdown)
-    assert any("10 từ vựng và 5 bài tập" in c.value for c in at.caption)
+    assert any("10 từ vựng" in c.value and "5 bài tập" in c.value for c in at.caption)
+    assert at.toggle(key="scn_with_vocab").value and at.toggle(key="scn_with_ex").value
     assert sum(1 for t in at.text_area if t.key and t.key.startswith("scn_prompt_")) == 3
     assert len([s for s in at.selectbox if s.key and s.key.endswith("_tail")]) == 6
+
+
+# ---------------------------------------------------------------------------
+# Vocabulary & exercises appended after the scenes
+# ---------------------------------------------------------------------------
+def _images(tmp_path, n=3):
+    images = {}
+    for i in range(n):
+        images[i] = str(tmp_path / f"s{i}.png")
+        Image.new("RGB", (270, 480), BG).save(images[i])
+    return images
+
+
+def test_vocabulary_points_at_the_line_that_uses_the_word(v3_dict):
+    story = parse_story(v3_dict)
+    turns = story.flat_dialogue()
+    by_word = {v.word: turns[v.dialogue_idx].en for v in story.vocabulary}
+    assert by_word["interview"] == "Hello, I'm here for the interview."
+    assert by_word["deadline"] == "How do you handle deadlines?"          # inflected form, scene 2
+    assert by_word["solve"] == "Yes, I enjoy solving problems together."
+    assert story.vocab_without_example() == []
+    assert [e.type for e in story.exercises][:3] == ["multiple_choice", "fill_blank", "translate_vi_en"]
+
+    lesson = story.to_lesson()
+    assert lesson.vocab_example(lesson.vocabulary[0])[1] == "Xin chào, tôi đến để tham gia buổi phỏng vấn."
+
+
+def test_vocabulary_word_missing_from_dialogue_falls_back_to_its_scene(v3_dict):
+    v3_dict["vocabulary"][0].update(word="zebra", scene_idx=2)
+    story = parse_story(v3_dict)
+    assert story.vocabulary[0].dialogue_idx == len(story.scenes[0].dialogue)   # first line of scene 2
+    assert story.vocab_without_example() == ["zebra"]
+
+
+@pytest.mark.parametrize(
+    "mutate,needle",
+    [
+        (lambda d: d["vocabulary"][1].pop("meaning_vi"), "vocabulary.1.meaning_vi"),
+        (lambda d: d["exercises"][0].update(type="quiz"), "exercises.0.type"),
+        (lambda d: d["vocabulary"][0].update(dialogue_idx=99), "vocabulary[0].dialogue_idx"),
+    ],
+)
+def test_vocabulary_and_exercise_errors_are_located(v3_dict, mutate, needle):
+    mutate(v3_dict)
+    with pytest.raises(StoryLoadError) as exc:
+        parse_story(v3_dict)
+    assert needle in str(exc.value)
+
+
+def test_render_appends_vocabulary_and_exercises(v3_dict, fake_tts, tmp_path):
+    story = parse_story(v3_dict)
+    cfg = RenderConfig(size=(270, 480), fps=10, preset="ultrafast", logo_path=None, think_seconds=2)
+    result = render_scene_video(story, _images(tmp_path), cfg, output_root=str(tmp_path / "out"), tts=fake_tts)
+    spoken = [s["text"] for s in result.speech]
+    assert "interview" in spoken and "buổi phỏng vấn" in spoken            # word + meaning
+    assert "What position is Mia applying for?" in spoken and "Software developer" in spoken
+    vocab = next(s for s in result.segments if s["name"] == "vocabulary")
+    assert vocab["start"] == pytest.approx(next(s for s in result.segments if s["name"] == "scene-3")["end"])
+    assert result.duration == pytest.approx(result.segments[-1]["end"])
+
+
+def test_vocabulary_and_exercises_can_be_switched_off(v3_dict, fake_tts, tmp_path):
+    story = parse_story(v3_dict)
+    cfg = RenderConfig(size=(270, 480), fps=10, preset="ultrafast", logo_path=None, think_seconds=2)
+    style = SceneStyle(vocabulary=False)
+    result = render_scene_video(story, _images(tmp_path), cfg, style, output_root=str(tmp_path / "out"), tts=fake_tts)
+    assert [s["name"] for s in result.segments] == ["scene-1", "scene-2", "scene-3", "exercises"]
+    assert "buổi phỏng vấn" not in [s["text"] for s in result.speech]
+
+
+def test_preview_frames_of_appended_parts(v3_dict, story, tmp_path):
+    cfg = RenderConfig(size=(270, 480), logo_path=None)
+    frames = lesson_preview_frames(parse_story(v3_dict), _images(tmp_path), cfg, SceneStyle())
+    assert list(frames) == ["Từ vựng", "Bài tập – câu hỏi", "Bài tập – đáp án"]
+    assert all(f.size == (270, 480) for f in frames.values())
+    assert lesson_preview_frames(story, {}, cfg, SceneStyle()) == {}       # story without vocabulary / exercises

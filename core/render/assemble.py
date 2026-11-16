@@ -107,8 +107,8 @@ def default_tts(cache_dir: str = TTS_CACHE_DIR) -> TTSFn:
 # ---------------------------------------------------------------------------
 # TTS prefetch
 # ---------------------------------------------------------------------------
-def collect_speech(lesson: Lesson, cfg: RenderConfig) -> list[tuple[str, str]]:
-    """Every unique (text, voice) the render will request, in order (dry run, no network)."""
+def record_speech(run: Callable[[TTSFn], object]) -> list[tuple[str, str]]:
+    """Every unique (text, voice) that *run* requests from the TTS function it is given (dry run, no network)."""
     needed: list[tuple[str, str]] = []
     silent = os.path.join(tempfile.mkdtemp(prefix="dry_"), "silence.wav")
     with wave.open(silent, "wb") as wf:
@@ -121,12 +121,23 @@ def collect_speech(lesson: Lesson, cfg: RenderConfig) -> list[tuple[str, str]]:
         needed.append((text, voice))
         return silent
 
-    ctx = Ctx(lesson, cfg)
-    for build in (build_intro, build_dialogue, build_vocab, build_outro):
-        build(ctx, _record)
-    build_exercises(ctx, _record, None)
-    shutil.rmtree(os.path.dirname(silent), ignore_errors=True)
+    try:
+        run(_record)
+    finally:
+        shutil.rmtree(os.path.dirname(silent), ignore_errors=True)
     return list(dict.fromkeys(needed))
+
+
+def collect_speech(lesson: Lesson, cfg: RenderConfig) -> list[tuple[str, str]]:
+    """Every unique (text, voice) the lesson render will request, in order."""
+    ctx = Ctx(lesson, cfg)
+
+    def _run(tts: TTSFn) -> None:
+        for build in (build_intro, build_dialogue, build_vocab, build_outro):
+            build(ctx, tts)
+        build_exercises(ctx, tts, None)
+
+    return record_speech(_run)
 
 
 def prefetch_tts(items: list[tuple[str, str]], tts: TTSFn, progress_cb: ProgressFn | None = None,

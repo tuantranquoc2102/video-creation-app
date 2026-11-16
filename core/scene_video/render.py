@@ -3,6 +3,9 @@
 Only the current speaker's bubble is on screen (English line + Vietnamese translation);
 the next turn replaces it with the next speaker's bubble.  Bubble position and tail
 direction come from ``Scene.bubbles`` (per character, per scene).
+
+After the scenes, the story's vocabulary and exercises (when present) are appended with the
+lesson video's own builders (:mod:`core.render.segments`), so both videos look the same there.
 """
 
 from __future__ import annotations
@@ -21,11 +24,12 @@ from PIL import Image, ImageDraw, ImageFilter
 from config import SCENE_OUTPUT_DIR
 from core.lesson.text import split_by_language
 from core.render import canvas as cv
-from core.render.assemble import ProgressFn, default_tts, encode_shots, prefetch_tts
+from core.render.assemble import ProgressFn, default_tts, encode_shots, prefetch_tts, record_speech
 from core.render.config import RenderConfig
+from core.render.segments import Ctx, build_exercises, build_vocab, draw_exercise, draw_vocab
 from core.render.segments.common import resolve_voices
 from core.render.subtitles import write_srt
-from core.render.timeline import AudioSequencer, Shot, SubCue, TTSFn
+from core.render.timeline import AudioSequencer, Shot, SubCue, TTSFn, make_tick_wav
 from core.scene_video.schema import BubbleLayout, Story, story_to_json
 from core.utils import resolve_output_path, safe_filename, slugify
 
@@ -43,6 +47,8 @@ class SceneStyle:
     show_name: bool = True          # speaker name above the English line
     vi_audio: bool = False          # also read the Vietnamese translation aloud
     scene_pause: float = 0.6        # seconds the illustration is shown alone before the first bubble
+    vocabulary: bool = True         # append the vocabulary part (when the story has one)
+    exercises: bool = True          # append the practice part (when the story has one)
     bubble_fill: str = "#ffffff"
     bubble_alpha: int = 245         # opacity of the whole bubble (0–255)
     text_en: str = "#0f172a"
@@ -279,6 +285,41 @@ def build_scene_shots(story: Story, images: dict[int, str], cfg: RenderConfig, s
     return shots
 
 
+# ---------------------------------------------------------------------------
+# Vocabulary & exercises (lesson video builders)
+# ---------------------------------------------------------------------------
+def _lesson_ctx(story: Story, images: dict[int, str], cfg: RenderConfig) -> Ctx:
+    """Lesson-builder context; the first scene's illustration is blurred behind the cards."""
+    first = next((images[i] for i in sorted(images) if images[i] and os.path.isfile(images[i])), None)
+    return Ctx(story.to_lesson(first), cfg)
+
+
+def build_lesson_shots(story: Story, images: dict[int, str], cfg: RenderConfig, style: SceneStyle, tts: TTSFn,
+                       tick_path: str | None = None) -> list[Shot]:
+    """Vocabulary then exercises, exactly as the lesson video draws and reads them."""
+    ctx = _lesson_ctx(story, images, cfg)
+    shots: list[Shot] = []
+    if style.vocabulary and story.vocabulary:
+        shots += build_vocab(ctx, tts)
+    if style.exercises and story.exercises:
+        shots += build_exercises(ctx, tts, tick_path)
+    return shots
+
+
+def lesson_preview_frames(story: Story, images: dict[int, str], cfg: RenderConfig,
+                          style: SceneStyle) -> dict[str, Image.Image]:
+    """Representative stills of the appended parts (no TTS) for the review step."""
+    ctx = _lesson_ctx(story, images, cfg)
+    frames: dict[str, Image.Image] = {}
+    if style.vocabulary and story.vocabulary:
+        frames["Từ vựng"] = draw_vocab(ctx, 0)
+    if style.exercises and story.exercises:
+        ex = story.exercises[0]
+        frames["Bài tập – câu hỏi"] = draw_exercise(ctx, 0, "countdown", cfg.think_seconds or ex.think_seconds)
+        frames["Bài tập – đáp án"] = draw_exercise(ctx, 0, "answer")
+    return {k: cv.apply_logo(v, cfg).convert("RGB") for k, v in frames.items()}
+
+
 def render_scene_video(
     story: Story,
     images: dict[int, str],
@@ -303,8 +344,12 @@ def render_scene_video(
     os.makedirs(out_dir, exist_ok=True)
     work = tempfile.mkdtemp(prefix="scene_")
     try:
-        prefetch_tts(_speech_items(story, cfg, style, resolve_voices(story, cfg)), tts, progress_cb)
+        speech = _speech_items(story, cfg, style, resolve_voices(story, cfg))
+        speech += record_speech(lambda rec: build_lesson_shots(story, images, cfg, style, rec))
+        prefetch_tts(list(dict.fromkeys(speech)), tts, progress_cb)
         shots = build_scene_shots(story, images, cfg, style, tts, progress_cb)
+        tick = make_tick_wav(os.path.join(work, "tick.wav")) if cfg.tick_sound else None
+        shots += build_lesson_shots(story, images, cfg, style, tts, tick)
 
         thumb_path = os.path.join(out_dir, "thumbnail.png")
         first_bubble = next((s for s in shots if s.audio), shots[0])
